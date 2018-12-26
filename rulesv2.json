@@ -11,7 +11,7 @@
     "IAM::Role",
     "IAM::Policy",
     "IAM::InstanceProfile",
-    "ECS::*"
+    
   ],
   "require_ref_attributes" :
     {
