@@ -1,7 +1,7 @@
 {
-  "allow_root_keys" : ["AWSTemplateFormatVersion", "Description", "Parameters", "Conditions", "Resources", "Outputs"],
+  "allow_root_keys" : [],
   "allow_parameters" : [],
-  "allow_resources" : [  ],
+  "allow_resources" : [],
   "require_ref_attributes" :
     {
       "EC2::Instance" : [ "InstanceType", "ImageId", "SecurityGroupIds", "SubnetId", "KeyName", "IamInstanceProfile" ],
