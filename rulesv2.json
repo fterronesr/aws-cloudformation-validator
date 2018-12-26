@@ -1,5 +1,5 @@
 {
-  "allow_root_keys" : [],
+  "allow_root_keys" : ["AWSTemplateFormatVersion", "Description", "Parameters", "Conditions", "Resources", "Outputs"],
   "allow_parameters" : [],
   "allow_resources" : [],
   "require_ref_attributes" :
