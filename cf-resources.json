@@ -1,11 +1,11 @@
 [
   { "Type" : "SG",
-    "ID" : "sg-37c9b499"
+    "ID" : "sg-014e52e8caf29228f"
   },
   { "Type" : "AMI",
-    "ID" : "ami-e7e52999"
+    "ID" : "ami-045f1b3f87ed83659"
   },
   { "Type" : "Subnet",
-    "ID" : "subnet-034e2999"
+    "ID" : "subnet-33952f54"
   }
 ]
