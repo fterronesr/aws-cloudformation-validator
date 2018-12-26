@@ -4,9 +4,7 @@
   "allow_resources" : [
     "CloudFormation::*",
     "CloudWatch::Alarm",
-    "EC2::Instance",
-    "EC2::Volume",
-    "EC2::SpotFleet",
+    "EC2::*",
     "ECS::Cluster",
     "EC2::VolumeAttachment",
     "ElasticLoadBalancing::LoadBalancer"
