@@ -1,15 +1,7 @@
 {
   "allow_root_keys" : ["AWSTemplateFormatVersion", "Description", "Parameters", "Conditions", "Resources", "Outputs"],
   "allow_parameters" : [],
-  "allow_resources" : [
-    "CloudFormation::*",
-    "CloudWatch::Alarm",
-    "EC2::*",
-
-    "ECS::*",
-    "ElasticLoadBalancing::*"
-
-  ],
+  "allow_resources" : [  ],
   "require_ref_attributes" :
     {
       "EC2::Instance" : [ "InstanceType", "ImageId", "SecurityGroupIds", "SubnetId", "KeyName", "IamInstanceProfile" ],
