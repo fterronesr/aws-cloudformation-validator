@@ -6,6 +6,7 @@
       "CloudWatch::Alarm",
       "EC2::*",
       "ECS::*",
+      "iam::*",
       "ElasticLoadBalancing::LoadBalancer" 
    ],
   "require_ref_attributes" :
