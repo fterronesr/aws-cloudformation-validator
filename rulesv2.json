@@ -6,6 +6,8 @@
     "CloudWatch::Alarm",
     "EC2::Instance",
     "EC2::Volume",
+    "EC2::SpotFleet",
+    "ECS::Cluster",
     "EC2::VolumeAttachment",
     "ElasticLoadBalancing::LoadBalancer"
   ],
