@@ -1,11 +1,7 @@
 {
   "allow_root_keys" : [],
   "allow_parameters" : [],
-<<<<<<< HEAD
   "allow_resources" : [],
-=======
-  "allow_resources" : [  ],
->>>>>>> parent of e658664... Update alll a todo
   "require_ref_attributes" :
     {
       "EC2::Instance" : [ "InstanceType", "ImageId", "SecurityGroupIds", "SubnetId", "KeyName", "IamInstanceProfile" ],
