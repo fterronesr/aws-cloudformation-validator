@@ -9,6 +9,7 @@
       "ECR::*",
       "IAM::*",
       "AutoScaling::*",
+      "ApplicationAutoScaling::*",
       "ElasticLoadBalancing::LoadBalancer" 
    ],
   "require_ref_attributes" :
