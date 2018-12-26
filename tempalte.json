@@ -1,0 +1,267 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Cleate ECS cluster in spot fleet",
+    "Parameters": {
+        "MaxSpotPrice": {
+            "Description": "Max Price of Spot Instance",
+            "Type": "String",
+            "Default": "0.0850"
+        },
+        "TargetCapacity": {
+            "Description": "Target Capacity of Spot Instance",
+            "Type": "String",
+            "Default": "1"
+        },
+        "InstanceType": {
+            "Description": "EC2 instance type of Spot Instance",
+            "Default": "c5.large",
+            "Type": "String"
+        },
+        "SpotFleetAMI": {
+            "Description": "AMI of Spot Instance",
+            "Type": "String",
+            "Default": "ami-045f1b3f87ed83659"
+        },
+        "IamFleetRoleARN": {
+            "Description": "IAM Role of Spot Instance",
+            "Type": "String",
+            "Default": "aws-service-role/ec2fleet.amazonaws.com/AWSServiceRoleForEC2Fleet_jenkins"
+        },
+        "IamAutoScalingRoleARN": {
+            "Description": "IAM Role of Spot Instance",
+            "Type": "String",
+            "Default": "aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        },        
+        "JenkinsInstanceProfile": {
+            "Description": "Instance Profile for Jenkins",
+            "Type": "String",
+            "Default": "devops-jenkins"
+        },
+        "ECSClusterJenkinsSlaveSG": {
+            "Description": "Jenkins Security Group",
+            "Type": "String",
+            "Default": "sg-014e52e8caf29228f"
+        },
+        "SubnetId": {
+            "Description": "Subnet Id of Spot Instance",
+            "Type": "String",
+            "Default": "subnet-33952f54"
+        },
+        "KeyName": {
+            "Description": "Key Name",
+            "Type": "String",
+            "Default": "test"
+        }
+    },
+    "Resources": {
+        "ECSCluster": {
+            "Type": "AWS::ECS::Cluster"
+        },
+        "SpotFleet": {
+            "Type": "AWS::EC2::SpotFleet",
+            "Properties": {
+                "SpotFleetRequestConfigData": {
+                    "IamFleetRole": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "arn:aws:iam::",
+                                {
+                                    "Ref": "AWS::AccountId"
+                                },
+                                ":role/",
+                                {
+                                    "Ref": "IamFleetRoleARN"
+                                }
+                            ]
+                        ]
+                    },
+                    "SpotPrice": {
+                        "Ref": "MaxSpotPrice"
+                    },
+                    "TargetCapacity": {
+                        "Ref": "TargetCapacity"
+                    },
+                    "LaunchSpecifications": [
+                        {
+                            "EbsOptimized": "false",
+                            "InstanceType": {
+                                "Ref": "InstanceType"
+                            },
+                            "TagSpecifications": [
+                                {
+                                    "ResourceType": "instance",
+                                    "Tags": [
+                                        {
+                                            "Key": "Name",
+                                            "Value": "DevOps-Jenkins-Slave"
+                                        },
+                                        {
+                                            "Key": "Grupo",
+                                            "Value": "VELOCITY"
+                                        },
+                                        {
+                                            "Key": "ServerRol",
+                                            "Value": "Slave Builder Server"
+                                        },
+                                        {
+                                            "Key": "Direccion",
+                                            "Value": "INFRA"
+                                        },
+                                        {
+                                            "Key": "CTLAdmin",
+                                            "Value": "NO"
+                                        },
+                                        {
+                                            "Key": "Tipo",
+                                            "Value": "Operacion"
+                                        },
+                                        {
+                                            "Key": "Entorno",
+                                            "Value": "PRD"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "IamInstanceProfile": {
+                                "Arn": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:iam::",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":instance-profile/",
+                                            {
+                                                "Ref": "JenkinsInstanceProfile"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            },
+                            "BlockDeviceMappings": [
+                                {
+                                    "DeviceName": "/dev/sda1",
+                                    "Ebs": {
+                                        "VolumeSize": 100,
+                                        "VolumeType": "gp2"
+                                    }
+                                }
+                            ],
+                            "ImageId": {
+                                "Ref": "SpotFleetAMI"
+                            },
+                            "Monitoring": {
+                                "Enabled": "true"
+                            },
+                            "KeyName": {
+                                "Ref": "KeyName"
+                            },
+                            "NetworkInterfaces": [
+                                {
+                                    "DeviceIndex": 0,
+                                    "SubnetId": {
+                                        "Ref": "SubnetId"
+                                    },
+                                    "Groups": [
+                                        {
+                                            "Ref": "ECSClusterJenkinsSlaveSG"
+                                        }
+                                    ],
+                                    "AssociatePublicIpAddress": true
+                                }
+                            ],
+                            "UserData": {
+                                "Fn::Base64": {
+                                    "Fn::Join": [
+                                        "",
+                                        [                                         
+                                            "#!/bin/bash \n",
+                                            "yum -y --security update\n",
+                                            "yum -y update aws-cli\n",
+                                            "yum -y install aws-cli\n",
+                                            "yum -y install wget\n",
+                                            "yum -y groupinstall 'Development Tools'\n",
+                                            "yum -y remove java-1.7.0\n",
+                                            "yum -y install java-1.8*\n",
+                                            "echo \"ECS_CLUSTER=",
+                                            {
+                                                "Ref": "ECSCluster"
+                                            },
+                                            " \" >> /etc/ecs/ecs.config \n",
+                                            "docker pull caleidos/training:v1\n"
+                                        ]
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+       "SpotFleetScalingTarget": {
+            "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+            "Properties": {
+                "MaxCapacity": 5,
+                "MinCapacity": 1,
+                "ResourceId": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            "spot-fleet-request",
+                            {
+                                "Ref": "SpotFleet"
+                            }
+                        ]
+                    ]
+                },
+                "RoleARN": {
+                    "Fn::Join": [
+
+                          "",
+
+                          [
+
+                            "arn:aws:iam::",
+
+                            {
+
+                              "Ref": "AWS::AccountId"
+
+                            },
+
+                            ":role/",
+
+                            {
+
+                              "Ref": "IamAutoScalingRoleARN"
+
+                            }
+
+                          ]
+
+                        ]
+                },
+                "ScalableDimension": "ec2:spot-fleet-request:TargetCapacity",
+                "ServiceNamespace": "ec2"
+            }
+        },
+        "FleetUpPolicy": {
+            "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+            "Properties": {
+                "PolicyName": "FleetUpPolicy",
+                "PolicyType": "TargetTrackingScaling",
+                "ScalingTargetId": {
+                    "Ref": "SpotFleetScalingTarget"
+                },
+                "TargetTrackingScalingPolicyConfiguration": {
+                    "PredefinedMetricSpecification": {
+                        "PredefinedMetricType": "EC2SpotFleetRequestAverageCPUUtilization"
+                    },
+                    "TargetValue": 70
+                }
+            }
+        }
+    }
+}
