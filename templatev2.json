@@ -5,7 +5,7 @@
         "MaxSpotPrice": {
             "Description": "Max Price of Spot Instance",
             "Type": "String",
-            "Default": "0.0850"
+            "Default": "0.0416"
         },
         "TargetCapacity": {
             "Description": "Target Capacity of Spot Instance",
@@ -14,7 +14,7 @@
         },
         "InstanceType": {
             "Description": "EC2 instance type of Spot Instance",
-            "Default": "c5.large",
+            "Default": "t3.medium",
             "Type": "String"
         },
         "SpotFleetAMI": {
@@ -30,7 +30,7 @@
         "IamAutoScalingRoleARN": {
             "Description": "IAM Role of Spot Instance",
             "Type": "String",
-            "Default": "aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+            "Default": "aws-service-role/ec2.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_EC2SpotFleetRequest"                        
         },        
         "JenkinsInstanceProfile": {
             "Description": "Instance Profile for Jenkins",
@@ -40,17 +40,22 @@
         "ECSClusterJenkinsSlaveSG": {
             "Description": "Jenkins Security Group",
             "Type": "String",
-            "Default": "sg-014e52e8caf29228f"
+            "Default": "sg-0c5d2bd40fb9d4234"
+        },
+        "ECSClusterJenkinsSlaveSGDefault": {
+            "Description": "Jenkins Security Group",
+            "Type": "String",
+            "Default": "sg-0a3b8741"
         },
         "SubnetId": {
             "Description": "Subnet Id of Spot Instance",
             "Type": "String",
-            "Default": "subnet-33952f54"
+            "Default": "subnet-f6d01a9c"
         },
         "KeyName": {
             "Description": "Key Name",
             "Type": "String",
-            "Default": "test"
+            "Default": "admin"
         }
     },
     "Resources": {
@@ -142,9 +147,9 @@
                             },
                             "BlockDeviceMappings": [
                                 {
-                                    "DeviceName": "/dev/sda1",
+                                    "DeviceName": "/dev/xvda",
                                     "Ebs": {
-                                        "VolumeSize": 100,
+                                        "VolumeSize": 50,
                                         "VolumeType": "gp2"
                                     }
                                 }
@@ -167,6 +172,9 @@
                                     "Groups": [
                                         {
                                             "Ref": "ECSClusterJenkinsSlaveSG"
+                                        },
+                                        {
+                                            "Ref": "ECSClusterJenkinsSlaveSGDefault"
                                         }
                                     ],
                                     "AssociatePublicIpAddress": true
@@ -176,15 +184,10 @@
                                 "Fn::Base64": {
                                     "Fn::Join": [
                                         "",
-                                        [                                         
+                                        [
+                                         
+                                         
                                             "#!/bin/bash \n",
-                                            "yum -y --security update\n",
-                                            "yum -y update aws-cli\n",
-                                            "yum -y install aws-cli\n",
-                                            "yum -y install wget\n",
-                                            "yum -y groupinstall 'Development Tools'\n",
-                                            "yum -y remove java-1.7.0\n",
-                                            "yum -y install java-1.8*\n",
                                             "echo \"ECS_CLUSTER=",
                                             {
                                                 "Ref": "ECSCluster"
@@ -203,7 +206,7 @@
        "SpotFleetScalingTarget": {
             "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
             "Properties": {
-                "MaxCapacity": 5,
+                "MaxCapacity": 1,
                 "MinCapacity": 1,
                 "ResourceId": {
                     "Fn::Join": [
