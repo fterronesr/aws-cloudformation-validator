@@ -3,10 +3,12 @@
   "allow_parameters" : [],
    "allow_resources" : [ 
        "CloudFormation::*",
-      "CloudWatch::Alarm",
+      "CloudWatch::*",
       "EC2::*",
       "ECS::*",
-      "iam::*",
+      "ECR::*",
+      "IAM::*",
+      "AutoScaling::*",
       "ElasticLoadBalancing::LoadBalancer" 
    ],
   "require_ref_attributes" :
