@@ -5,6 +5,7 @@
        "CloudFormation::*",
       "CloudWatch::Alarm",
       "EC2::*",
+      "ECS::*",
       "ElasticLoadBalancing::LoadBalancer" 
    ],
   "require_ref_attributes" :
