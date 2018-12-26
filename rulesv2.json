@@ -1,0 +1,8 @@
+{
+  "allow_root_keys" : [],
+  "allow_parameters" : [],
+  "allow_resources" : [],
+  "require_ref_attributes" : {},
+  "allow_additional_attributes" : {},
+  "not_allow_attributes" : {}
+}
