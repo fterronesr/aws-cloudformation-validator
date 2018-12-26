@@ -5,9 +5,8 @@
        "CloudFormation::*",
       "CloudWatch::*",
       "EC2::*",
-      "ECS::*",
+ 
       "ECR::*",
-
       "AutoScaling::*",
       "ApplicationAutoScaling::*",
       "ElasticLoadBalancing::LoadBalancer" 
